@@ -1,0 +1,167 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="hotdog.dbmodel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="FavoriteHotDog">
+          <Key>
+            <PropertyRef Name="ProfileID" />
+            <PropertyRef Name="HotDogID" />
+          </Key>
+          <Property Name="ProfileID" Type="numeric" Precision="9" Scale="0" Nullable="false" />
+          <Property Name="HotDogID" Type="numeric" Precision="9" Scale="0" Nullable="false" />
+        </EntityType>
+        <EntityType Name="HotDog">
+          <Key>
+            <PropertyRef Name="HotDogID" />
+          </Key>
+          <Property Name="HotDogID" Type="numeric" Precision="9" Scale="0" Nullable="false" />
+          <Property Name="Name" Type="varchar" MaxLength="255" Nullable="false" />
+          <Property Name="LastAte" Type="datetime" Nullable="false" />
+          <Property Name="LastPlaceAte" Type="varchar" MaxLength="255" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Profile">
+          <Key>
+            <PropertyRef Name="ProfileID" />
+          </Key>
+          <Property Name="ProfileID" Type="numeric" Precision="9" Scale="0" Nullable="false" />
+          <Property Name="Name" Type="varchar" MaxLength="255" Nullable="false" />
+          <Property Name="Bio" Type="varchar" MaxLength="3000" Nullable="false" />
+          <Property Name="HotDogID" Type="numeric" Precision="9" Scale="0" />
+          <Property Name="Picture" Type="varchar" MaxLength="3000" />
+        </EntityType>
+        <Association Name="FK_FavoriteHotDog_HotDog">
+          <End Role="HotDog" Type="Self.HotDog" Multiplicity="1" />
+          <End Role="FavoriteHotDog" Type="Self.FavoriteHotDog" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="HotDog">
+              <PropertyRef Name="HotDogID" />
+            </Principal>
+            <Dependent Role="FavoriteHotDog">
+              <PropertyRef Name="HotDogID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_FavoriteHotDog_Profile">
+          <End Role="Profile" Type="Self.Profile" Multiplicity="1" />
+          <End Role="FavoriteHotDog" Type="Self.FavoriteHotDog" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Profile">
+              <PropertyRef Name="ProfileID" />
+            </Principal>
+            <Dependent Role="FavoriteHotDog">
+              <PropertyRef Name="ProfileID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="hotdogdbmodelStoreContainer">
+          <EntitySet Name="FavoriteHotDog" EntityType="Self.FavoriteHotDog" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="HotDog" EntityType="Self.HotDog" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Profile" EntityType="Self.Profile" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_FavoriteHotDog_HotDog" Association="Self.FK_FavoriteHotDog_HotDog">
+            <End Role="HotDog" EntitySet="HotDog" />
+            <End Role="FavoriteHotDog" EntitySet="FavoriteHotDog" />
+          </AssociationSet>
+          <AssociationSet Name="FK_FavoriteHotDog_Profile" Association="Self.FK_FavoriteHotDog_Profile">
+            <End Role="Profile" EntitySet="Profile" />
+            <End Role="FavoriteHotDog" EntitySet="FavoriteHotDog" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="hotdog.dbmodel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="HotDog">
+          <Key>
+            <PropertyRef Name="HotDogID" />
+          </Key>
+          <Property Name="HotDogID" Type="Decimal" Precision="9" Scale="0" Nullable="false" />
+          <Property Name="Name" Type="String" MaxLength="255" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="LastAte" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="LastPlaceAte" Type="String" MaxLength="255" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="Profiles" Relationship="Self.FavoriteHotDog" FromRole="HotDog" ToRole="Profile" />
+        </EntityType>
+        <EntityType Name="Profile">
+          <Key>
+            <PropertyRef Name="ProfileID" />
+          </Key>
+          <Property Name="ProfileID" Type="Decimal" Precision="9" Scale="0" Nullable="false" />
+          <Property Name="Name" Type="String" MaxLength="255" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Bio" Type="String" MaxLength="3000" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="HotDogID" Type="Decimal" Precision="9" Scale="0" />
+          <NavigationProperty Name="HotDogs" Relationship="Self.FavoriteHotDog" FromRole="Profile" ToRole="HotDog" />
+          <Property Name="Picture" Type="String" MaxLength="3000" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <Association Name="FavoriteHotDog">
+          <End Role="HotDog" Type="Self.HotDog" Multiplicity="*" />
+          <End Role="Profile" Type="Self.Profile" Multiplicity="*" />
+        </Association>
+        <EntityContainer Name="hotdogEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="HotDogs" EntityType="Self.HotDog" />
+          <EntitySet Name="Profiles" EntityType="Self.Profile" />
+          <AssociationSet Name="FavoriteHotDog" Association="Self.FavoriteHotDog">
+            <End Role="HotDog" EntitySet="HotDogs" />
+            <End Role="Profile" EntitySet="Profiles" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="hotdogdbmodelStoreContainer" CdmEntityContainer="hotdogEntities">
+          <EntitySetMapping Name="HotDogs">
+            <EntityTypeMapping TypeName="hotdog.dbmodel.HotDog">
+              <MappingFragment StoreEntitySet="HotDog">
+                <ScalarProperty Name="HotDogID" ColumnName="HotDogID" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="LastAte" ColumnName="LastAte" />
+                <ScalarProperty Name="LastPlaceAte" ColumnName="LastPlaceAte" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Profiles">
+            <EntityTypeMapping TypeName="hotdog.dbmodel.Profile">
+              <MappingFragment StoreEntitySet="Profile">
+                <ScalarProperty Name="Picture" ColumnName="Picture" />
+                <ScalarProperty Name="ProfileID" ColumnName="ProfileID" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Bio" ColumnName="Bio" />
+                <ScalarProperty Name="HotDogID" ColumnName="HotDogID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <AssociationSetMapping Name="FavoriteHotDog" TypeName="hotdog.dbmodel.FavoriteHotDog" StoreEntitySet="FavoriteHotDog">
+            <EndProperty Name="HotDog">
+              <ScalarProperty Name="HotDogID" ColumnName="HotDogID" />
+            </EndProperty>
+            <EndProperty Name="Profile">
+              <ScalarProperty Name="ProfileID" ColumnName="ProfileID" />
+            </EndProperty>
+          </AssociationSetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="true" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

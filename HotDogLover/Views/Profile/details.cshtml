@@ -1,0 +1,54 @@
+﻿@model HotDogLover.Models.Profile
+
+@{
+    ViewBag.Title = "Profile Details";
+}
+
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-6"><h1>Hot Dog Lover Profile</h1></div>
+        <div class="col-md-6 pull-right">@Html.ActionLink("Change", "Edit", "Profile", new {id=Model.ProfileID }, new { @class = "glyphicon glyphicon-pencil" })</div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">@Html.ActionLink("Back", "Index", "Profile")</div>
+    </div>
+    <div class="row">
+        <div class="col-md-3">
+            <div><img src="@Url.Content(Model.Picture)" alt="Profile Pic" class="profile" /></div>
+            <ul class="profile-detail-items">
+                <li><span>Favorite Dog:</span> @Model.FavoriteHotDog.HotDogName</li>
+                <li><span>Last Ate:</span> @Model.FavoriteHotDog.LastPlaceAte</li>
+                <li><span>Last Ate:</span> @Model.FavoriteHotDog.LastTimeAte</li>
+            </ul>
+        </div>
+        <div class="col-md-9">
+            <h2>@Model.Name</h2>
+            <p>
+                @Model.Bio
+            </p>
+            <div class="dog-list">
+                <div class="row">
+                    <div class="col-md-3">
+                        <h3>Past Dogs</h3>
+                    </div>
+                    <div class="col-md-9">
+                        @Html.ActionLink("Add", "CreateDog", "Profile", new { id = Model.ProfileID }, new { @class = "glyphicon glyphicon-pencil" })
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <ul>
+                            @foreach (var hotdogs in Model.HotDogList)
+                            {
+                                <li>@hotdogs.HotDogName (@hotdogs.LastTimeAte)</li>
+                            }
+                        </ul>
+
+
+                    </div>
+                </div>
+            </div>
+</div>
+
+
