@@ -1,4 +1,5 @@
 ﻿using HotDogLover.DAL;
+using HotDogLover.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,7 @@ namespace HotDogLover.Services
     public class ProfileService : IProfileService
     {
         private hotdogEntities db = new hotdogEntities();
+
 
         public List<Models.Profile> ListAll()
         {
@@ -32,6 +34,48 @@ namespace HotDogLover.Services
 
         public Models.Profile Get(int id)
         {
+            //read over this:
+            //http://stackoverflow.com/questions/21858889/entity-framework6-code-first-many-to-many-select-always-null
+              using(var db=new hotdogEntities()){
+                var profile = (
+                        from p in db.Profiles
+                            //.Include("HotDogs").Where(m => m.ProfileID == id)
+                        where p.ProfileID==id
+                        select new Models.Profile()
+                        {
+                            ProfileID = (int)p.ProfileID,
+                            Name = p.Name,
+                            Bio = p.Bio,
+                            Picture = p.Picture,
+                            FavoriteHotDog = db.HotDogs
+                                .Where(x => x.HotDogID == p.HotDogID)
+                                .Select(h => new Models.HotDog()
+                                {
+                                    HotDogID = (int)h.HotDogID,
+                                    HotDogName = h.Name,
+                                    LastTimeAte = h.LastAte,
+                                    LastPlaceAte = h.LastPlaceAte
+                                }).FirstOrDefault()
+                        }).FirstOrDefault();
+                  
+                  
+                  var hotdogs = (
+                        from dog in db.HotDogs
+                        select new Models.HotDog
+                        {
+                            HotDogID = (int)dog.HotDogID,
+                            HotDogName = dog.Name,
+                            LastTimeAte = dog.LastAte,
+                            LastPlaceAte = dog.LastPlaceAte
+                        }).ToList();
+                  
+                  foreach (Models.HotDog hotdog in profile.HotDogList) {
+                      int i = hotdog.HotDogID; 
+                  }
+                  profile.HotDogList = hotdogs;
+                  return profile;
+                }
+            /*
             DAL.Profile modelProfile = db.Profiles.Find(id);
             DAL.HotDog modelHotdog = db.HotDogs.Find(modelProfile.HotDogID);
 
@@ -65,6 +109,7 @@ namespace HotDogLover.Services
             };
 
             return viewProfile;
+             */
         }
 
         public void Add(Models.Profile profile)
