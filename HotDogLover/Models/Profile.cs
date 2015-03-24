@@ -13,5 +13,6 @@ namespace HotDogLover.Models
         public string Picture { get; set; }
         public HotDog FavoriteHotDog { get; set; }
         public List<HotDog> HotDogList { get; set; }
+        public IEnumerable<HotDog> HotDogListTmp { get; set; }
     }
 }

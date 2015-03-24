@@ -1,5 +1,6 @@
 ﻿using HotDogLover.DAL;
 using HotDogLover.Models;
+using HotDogLover.utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,6 +15,21 @@ namespace HotDogLover.Services
 
         public List<Models.Profile> ListAll()
         {
+            using(var db=new hotdogEntities()){
+                var viewProfiles = ( 
+                    from profiles in db.Profiles
+                    select new Models.Profile()
+                    {
+                        ProfileID = (int)profiles.ProfileID,
+                        Name = profiles.Name,
+                        Bio = profiles.Bio,
+                        Picture = profiles.Picture
+                    }
+                );
+                return viewProfiles.ToList();
+            }
+
+            /*
             List<Models.Profile> viewProfiles = new  List<Models.Profile>();
             Models.HotDog viewHotDog = new Models.HotDog();
             List<DAL.Profile> modelProfiles = db.Profiles.ToList();
@@ -30,49 +46,44 @@ namespace HotDogLover.Services
                 viewProfiles.Add(viewProfile);
             }
             return viewProfiles;
+             */ 
         }
 
         public Models.Profile Get(int id)
         {
-            //read over this:
-            //http://stackoverflow.com/questions/21858889/entity-framework6-code-first-many-to-many-select-always-null
               using(var db=new hotdogEntities()){
-                var profile = (
-                        from p in db.Profiles
-                            //.Include("HotDogs").Where(m => m.ProfileID == id)
-                        where p.ProfileID==id
-                        select new Models.Profile()
-                        {
-                            ProfileID = (int)p.ProfileID,
-                            Name = p.Name,
-                            Bio = p.Bio,
-                            Picture = p.Picture,
-                            FavoriteHotDog = db.HotDogs
-                                .Where(x => x.HotDogID == p.HotDogID)
-                                .Select(h => new Models.HotDog()
-                                {
-                                    HotDogID = (int)h.HotDogID,
-                                    HotDogName = h.Name,
-                                    LastTimeAte = h.LastAte,
-                                    LastPlaceAte = h.LastPlaceAte
-                                }).FirstOrDefault()
-                        }).FirstOrDefault();
-                  
-                  
-                  var hotdogs = (
-                        from dog in db.HotDogs
-                        select new Models.HotDog
-                        {
-                            HotDogID = (int)dog.HotDogID,
-                            HotDogName = dog.Name,
-                            LastTimeAte = dog.LastAte,
-                            LastPlaceAte = dog.LastPlaceAte
-                        }).ToList();
-                  
-                  foreach (Models.HotDog hotdog in profile.HotDogList) {
-                      int i = hotdog.HotDogID; 
-                  }
-                  profile.HotDogList = hotdogs;
+                  var profile = (
+                    from profiles in db.Profiles
+                    from hotdogs in profiles.HotDogs
+                    where profiles.ProfileID == id
+                    select new Models.Profile()
+                    {
+                        ProfileID = (int)profiles.ProfileID,
+                        Name = profiles.Name,
+                        Bio = profiles.Bio,
+                        Picture = profiles.Picture,
+                        HotDogListTmp = (
+                                from p in db.Profiles
+                                from hd in p.HotDogs
+                                select new Models.HotDog() {
+                                    HotDogID = (int)hd.HotDogID,
+                                    HotDogName = hd.Name,
+                                    LastTimeAte = hd.LastAte,
+                                    LastPlaceAte = hd.LastPlaceAte
+                                }
+                            ),
+                        FavoriteHotDog = db.HotDogs
+                            .Where(x => x.HotDogID == profiles.HotDogID)
+                            .Select(h => new Models.HotDog()
+                            {
+                                HotDogID = (int)h.HotDogID,
+                                HotDogName = h.Name,
+                                LastTimeAte = h.LastAte,
+                                LastPlaceAte = h.LastPlaceAte
+                            }).FirstOrDefault()
+                    }).FirstOrDefault();
+                  //hack to convert IEnumerable to a list
+                  profile.HotDogList = profile.HotDogListTmp.ToList();
                   return profile;
                 }
             /*
@@ -114,22 +125,38 @@ namespace HotDogLover.Services
 
         public void Add(Models.Profile profile)
         {
-            throw new NotImplementedException();
+            DAL.Profile profileDAL = ConvertUtil.profilemodel2dal(profile);
+            db.SaveChanges();
         }
 
         public void AddDog(Models.Profile profile, Models.HotDog dog)
         {
-            throw new NotImplementedException();
-        }
+            DAL.HotDog hotdogDAL = ConvertUtil.hotdogmodel2dal(dog);
+
+            DAL.Profile profileDAO = db.Profiles.Find(profile.ProfileID);
+            profileDAO.HotDogs.Add(hotdogDAL);
+            db.SaveChanges();
+
+        }    
 
         public void Remove(Models.Profile profile)
         {
-            throw new NotImplementedException();
+            DAL.Profile profileDAO = db.Profiles.Find(profile.ProfileID);
+            db.Profiles.Remove(profileDAO);
+            db.SaveChanges();
         }
 
         public void Update(Models.Profile profile)
         {
-            throw new NotImplementedException();
+            var record2update = db.Profiles.Find(profile.ProfileID);
+
+            if (record2update != null)
+            {
+                record2update.Name = profile.Name;
+                record2update.Picture = profile.Picture;
+                record2update.Bio = profile.Bio;
+                db.SaveChanges();
+            }
         }
     }
 }

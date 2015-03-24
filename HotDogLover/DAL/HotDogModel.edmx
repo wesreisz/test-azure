@@ -17,7 +17,7 @@
           <Key>
             <PropertyRef Name="HotDogID" />
           </Key>
-          <Property Name="HotDogID" Type="numeric" Precision="9" Scale="0" Nullable="false" />
+          <Property Name="HotDogID" Type="numeric" Precision="9" Scale="0" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Name" Type="varchar" MaxLength="255" Nullable="false" />
           <Property Name="LastAte" Type="datetime" Nullable="false" />
           <Property Name="LastPlaceAte" Type="varchar" MaxLength="255" Nullable="false" />

@@ -5,7 +5,7 @@
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
       <Diagram DiagramId="8619da12a33b48d7abe3cb5e3b742c40" Name="Diagram1">
-        <EntityTypeShape EntityType="hotdog.dbmodel.HotDog" Width="1.5" PointX="0.75" PointY="0.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="hotdog.dbmodel.HotDog" Width="1.5" PointX="5.375" PointY="1.125" IsExpanded="true" />
         <EntityTypeShape EntityType="hotdog.dbmodel.Profile" Width="1.5" PointX="3" PointY="0.875" IsExpanded="true" />
         <AssociationConnector Association="hotdog.dbmodel.FavoriteHotDog" ManuallyRouted="false" />
       </Diagram>

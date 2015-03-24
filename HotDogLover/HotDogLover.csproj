@@ -125,6 +125,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ProfileController.cs" />
+    <Compile Include="Controllers\SampleHotDogsController.cs" />
     <Compile Include="Controllers\SampleProfilesController.cs" />
     <Compile Include="DAL\HotDog.cs">
       <DependentUpon>HotDogModel.tt</DependentUpon>
@@ -157,6 +158,7 @@
     <Compile Include="Services\IProfileService.cs" />
     <Compile Include="Services\ProfileService.cs" />
     <Compile Include="Services\ProfileServiceMock.cs" />
+    <Compile Include="utils\ConvertUtil.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap.css" />
@@ -220,6 +222,11 @@
     <Content Include="Views\SampleProfiles\Details.cshtml" />
     <Content Include="Views\SampleProfiles\Edit.cshtml" />
     <Content Include="Views\SampleProfiles\Index.cshtml" />
+    <Content Include="Views\SampleHotDogs\Create.cshtml" />
+    <Content Include="Views\SampleHotDogs\Delete.cshtml" />
+    <Content Include="Views\SampleHotDogs\Details.cshtml" />
+    <Content Include="Views\SampleHotDogs\Edit.cshtml" />
+    <Content Include="Views\SampleHotDogs\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -69,7 +69,7 @@ namespace HotDogLover.Controllers
             }
             catch
             {
-                return View();
+                return RedirectToAction("Edit", new { id = profile.ProfileID }); 
             }
         }
 
@@ -88,16 +88,16 @@ namespace HotDogLover.Controllers
             if (!ModelState.IsValid)
             {
                 ViewBag.error = "Please check your form and resubmit";
-                return RedirectToAction("CreateDog");
+                return RedirectToAction("CreateDog", new { id = profileID });
             }
             try
             {
                 profileService.AddDog(new Profile() { ProfileID = profileID }, dog);
                 return RedirectToAction("Details", new { id = profileID });
             }
-            catch
-            {
-                return View();
+            catch (Exception e){
+                ViewBag.error = "Please check your form and resubmit";
+                return RedirectToAction("CreateDog", new { id = profileID });
             }
         }
 
