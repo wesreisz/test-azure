@@ -137,7 +137,7 @@ namespace HotDogLover.Services
             profileDAO.HotDogs.Add(hotdogDAL);
             db.SaveChanges();
 
-        }    
+        }
 
         public void Remove(Models.Profile profile)
         {

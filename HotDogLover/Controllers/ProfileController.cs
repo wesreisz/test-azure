@@ -32,22 +32,6 @@ namespace HotDogLover.Controllers
             return View();
         }
 
-        // POST: Profile/Create
-        [HttpPost]
-        public ActionResult Create(FormCollection collection)
-        {
-            try
-            {
-                // TODO: Add insert logic here
-
-                return RedirectToAction("Index");
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
         // GET: Profile/Edit/5
         public ActionResult Edit(int id)
         {
@@ -100,7 +84,5 @@ namespace HotDogLover.Controllers
                 return RedirectToAction("CreateDog", new { id = profileID });
             }
         }
-
-     
     }
 }
